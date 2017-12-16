@@ -49,4 +49,23 @@ const solveHelper = (board, inc = true) => {
     return true;
 };
 
-module.exports = { solveHelper };
+/**
+ * [getSolution description]
+ * @param  {Array.<Array.<number>>} board [description]
+ * @return {Object}       [description]
+ */
+const getSolution = board => {
+  const boardA = board.map(x => x.slice());
+  const boardB = board.map(x => x.slice());
+  const hasSolution = solveHelper(boardA, true);
+  if (hasSolution) { solveHelper(boardB, false); }
+  const isUnique = hasSolution && boardA.every(
+    (row, index) => {
+        const rowB = boardB[index];
+        return row.every((x, i) => x === rowB[i]);
+    }
+  );
+  return { board: boardA, hasSolution, isUnique };
+};
+
+module.exports = { solveHelper, getSolution };

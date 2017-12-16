@@ -1,4 +1,4 @@
-const { solveHelper } = require('./solver');
+const { getSolution } = require('./solver');
 
 const getEmptyBoard = () => Array.from({length: 9})
   .map(() => Array.from({length: 9}).fill(0));
@@ -25,35 +25,23 @@ const getUniqueSolution = () => [
   [ 2, 1, 9, 6, 3, 4, 5, 7, 8 ],
   [ 3, 6, 4, 7, 5, 8, 2, 9, 1 ] ];
 
-describe('solveHelper', () => {
+describe('getSolution', () => {
 
   describe('unique solution', () => {
-
     test('should find a unique solution', () => {
-      const boardA = getUnique();
-      const boardB = getUnique();
-      solveHelper(boardA, true);
-      solveHelper(boardB, false);
-      expect(boardA).toEqual(boardB);
-      expect(boardA).toEqual(getUniqueSolution());
+      const {board, isUnique, hasSolution} = getSolution(getUnique());
+      expect(hasSolution).toBe(true);
+      expect(isUnique).toBe(true);
+      expect(board).toEqual(getUniqueSolution());
     });
-
   });
 
   describe('multiple solutions', () => {
-
     test('should find multiple solutions', () => {
-      const boardA = getEmptyBoard();
-      const boardB = getEmptyBoard();
-      solveHelper(boardA, true);
-      solveHelper(boardB, false);
-      expect(boardA).not.toEqual(boardB);
+      const {board, isUnique, hasSolution} = getSolution(getEmptyBoard());
+      expect(hasSolution).toBe(true);
+      expect(isUnique).toBe(false);
     });
-
   });
-
-
-
-
 
 });
