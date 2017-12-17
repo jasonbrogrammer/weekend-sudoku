@@ -43,8 +43,7 @@ const validate = board => {
   }
   for(let i = 0; i < length ; i++) {
     for(let j = 0; j < length ; j++) {
-      if (!board[i][j]) continue;
-      if (getOtherPoints(length, i, j).some(([row, col]) => board[row][col] === board[i][j])) return false;
+      if (board[i][j] && getOtherPoints(length, i, j).some(([row, col]) => board[row][col] === board[i][j])) return false;
     }
   }
   return true;
@@ -56,29 +55,30 @@ const validate = board => {
  * @param  {Array.<Array.<number>>} board [description]
  * @return {boolean}       [description]
  */
-const solveHelper = (board, inc = true) => {
+const solveHelper = (pos, values, board) => {
     const {length} = board;
+    const row = ~~(pos / length);
+    const col = pos % length;
+    const recurse = () => solveHelper(pos + 1, values, board);
 
-    const values = Array.from({length}).map((x, i) => i + 1);
-    if (!inc) values.reverse();
+    if (pos === length*length) return true;
+    if (board[row][col]) return recurse();
 
-    for (let i =0 ; i < length*length; i++) {
-      const row = Math.trunc(i / length);
-      const col = i % length;
-      if (board[row][col]) continue;
-      for (const value of values) {
-        if (getOtherPoints(length, row, col).some(([i, j]) => board[i][j] === value)) continue;
-        board[row][col] = value;
-        if (solveHelper(board, inc)) return true;
-        board[row][col] = 0;
-      }
-      return false;
+    for (const value of values) {
+      if (getOtherPoints(length, row, col).some(([i, j]) => board[i][j] === value)) continue;
+      board[row][col] = value;
+      if (recurse()) return true;
+      board[row][col] = 0;
     }
-
-    return true;
+    return false;
 };
 
-const solve = (board, ...args) => validate(board) && solveHelper(board, ...args);
+const solve = (board, inc) => {
+  if (!validate(board)) return false;
+  const values = Array.from({length: board.length}).map((x, i) => i + 1);
+  if (!inc) values.reverse();
+  return solveHelper(0, values, board);
+};
 
 /**
  * [getSolution description]
