@@ -87,16 +87,21 @@ const solve = (board, inc) => {
  */
 const getSolution = board => {
   const boardA = board.map(x => x.slice());
-  const boardB = board.map(x => x.slice());
   const hasSolution = solve(boardA, true);
-  if (hasSolution) { solve(boardB, false); }
-  const isUnique = hasSolution && boardA.every(
-    (row, index) => {
-        const rowB = boardB[index];
-        return row.every((x, i) => x === rowB[i]);
-    }
-  );
-  return { board: boardA, hasSolution, isUnique };
+  return {
+    board: boardA,
+    hasSolution,
+    isUnique: hasSolution && (() => {
+      const boardB = board.map(x => x.slice());
+      solve(boardB, false);
+      return boardA.every(
+        (row, index) => {
+            const rowB = boardB[index];
+            return row.every((x, i) => x === rowB[i]);
+        }
+      );
+    })()
+  };
 };
 
 module.exports = { getSolution, validSizes: [...dimensions.keys()] };
