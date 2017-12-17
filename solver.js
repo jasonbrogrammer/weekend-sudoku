@@ -25,23 +25,22 @@ const getBox = (length, row, col) => {
 };
 const getOtherPoints = (length, row, col) => {
   const result = [];
-  for (const fn of [getRow, getCol, getBox]) {
+  for (const fn of [getRow, getCol]) {
     for(const x of fn(length, row, col)) {
-      if (row !== x[0] || col !== x[1]) {
-        result.push(x);
-      }
+      if (row !== x[0] || col !== x[1]) { result.push(x); }
     }
+  }
+  for(const x of getBox(length, row, col)) {
+    if (row !== x[0] && col !== x[1]) { result.push(x); }
   }
   return result;
 };
 
 const validate = board => {
-  if (!dimensions.has(board.length)) {
+  const {length} = board;
+  if (!dimensions.has(length)) {
     throw new Error(`Invalid dimensions ${length}x${length}`);
   }
-  const {length} = board;
-  const values = Array.from({length}).map((x, i) => i + 1);
-
   for(let i = 0; i < length ; i++) {
     for(let j = 0; j < length ; j++) {
       if (!board[i][j]) continue;
