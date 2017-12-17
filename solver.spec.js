@@ -27,6 +27,12 @@ const getUniqueSolution = () => [
 
 describe('getSolution', () => {
 
+  test('should not mutate the board', () => {
+    const empty = getEmptyBoard();
+    getSolution(empty);
+    expect(empty).toEqual(getEmptyBoard());
+  });
+
   describe('invalid dimensions', () => {
     test('should throw', () => {
       expect(() => getSolution([])).toThrow();
