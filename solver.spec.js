@@ -27,6 +27,12 @@ const getUniqueSolution = () => [
 
 describe('getSolution', () => {
 
+  describe('invalid dimensions', () => {
+    test('should throw', () => {
+      expect(() => getSolution([])).toThrow();
+    })
+  });
+
   describe('unique solution', () => {
     test('should find a unique solution', () => {
       const {board, isUnique, hasSolution} = getSolution(getUnique());
